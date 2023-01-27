@@ -23,4 +23,9 @@ class ProductRepository extends AbstractRepository
             (int) ($queryParams['per_page'] ?? self::DEFAULT_PAGE_SIZE)
         );
     }
+
+    public function show($id)
+    {
+        return $this->_getInstance()->findOrFail($id);
+    }
 }
