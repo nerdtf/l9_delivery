@@ -14,6 +14,7 @@ class ProductService
             DB::beginTransaction();
             try {
                 $product->update($attributes);
+                DB::commit();
             }
             catch (\Exception $e) {
                 DB::rollBack();

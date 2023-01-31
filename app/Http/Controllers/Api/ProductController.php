@@ -10,6 +10,7 @@ use App\Http\Resources\Products\ProductsCollection;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
+use App\Http\Resources\Products\ProductResource;
 
 class ProductController extends Controller
 {
@@ -29,7 +30,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        return new ProductsCollection(
+        return new ProductResource(
             $this->productRepository->show($id)
         );
     }
@@ -37,7 +38,7 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product)
     {
-        return new ProductsCollection(
+        return new ProductResource(
             $this->productService->update($product, $request->validated())
         );
     }
