@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\IndexRequest;
-use App\Http\Requests\Products\StoreProductRequest;
 use App\Http\Requests\Products\UpdateProductRequest;
-use App\Http\Resources\Products\ProductsCollection;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
@@ -22,7 +20,7 @@ class ProductController extends Controller
 
     public function index(IndexRequest $request)
     {
-        return new ProductsCollection(
+        return ProductResource::collection(
             $this->productRepository->index($request->validated())
         );
     }
