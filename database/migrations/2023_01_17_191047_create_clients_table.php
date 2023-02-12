@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string("image")->nullable();
             $table->string('password');
-            $table->enum('status' , [ClientStatus::class]);
+            $table->enum('status' , ["active", "disabled"]);
             $table->timestamps();
         });
     }
