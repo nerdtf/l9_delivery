@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->foreignId('courier_id')->constrained()->onDelete('cascade');
-            $table->enum("status", [OrderStatus::class]);
+            $table->enum("status", ["new","processing","preparing","delivering","delivered","canceled"]);
             $table->timestamps();
         });
     }

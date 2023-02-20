@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\Client\LoginController;
 use App\Http\Controllers\Api\CourierController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,3 +31,6 @@ Route::apiResources([
     'products' =>  ProductController::class,
     "couriers" =>  CourierController::class
 ]);
+Route::middleware('auth:client')->group(function () {
+    Route::apiResource('orders', OrderController::class)->only("index", "store", "destroy", "show");
+});
