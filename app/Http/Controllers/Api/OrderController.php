@@ -25,7 +25,9 @@ class OrderController extends Controller
 
     public function show($orderId)
     {
-        return new OrderResource(Order::findOrFail($orderId));
+        $order = Order::findOrFail($orderId);
+        $this->authorize('view', $order);
+        return new OrderResource($order);
     }
 
     public function store(StoreOrderRequest $request)
@@ -35,5 +37,9 @@ class OrderController extends Controller
         );
     }
 
+//    public function destroy()
+//    {
+//
+//    }
 
 }
