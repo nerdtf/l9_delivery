@@ -15,7 +15,7 @@ class ClientService {
     {
         $validatedData = $validatedData->validated();
         $client = new Client();
-        $client->password = bcrypt($validatedData['password']);
+        $client->password = bcrypt($validatedData['password'] ?? now()->timestamp);
         $client->fill(Arr::except($validatedData, ['password']));
         $client->status = ClientStatus::Active;
         $client->save();
