@@ -13,7 +13,7 @@ class ClientObserver
             $uuid = str()->uuid();
             $extension = $client->image->extension();
             $filename = "{$uuid}.{$extension}";
-            Storage::disk('public')->putFileAs('images', $client->image, $filename);
+            Storage::disk('public')->putFileAs('client_images', $client->image, $filename);
             $client->image = $filename;
             $client->save();
         }

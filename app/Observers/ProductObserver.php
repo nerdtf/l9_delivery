@@ -14,7 +14,7 @@ class ProductObserver
             Storage::delete($product->getOriginal('image'));
 
             // Put the new image in storage
-            $product->image->store('images');
+            $product->image->store('product_images');
         }
     }
 }
