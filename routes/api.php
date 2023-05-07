@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\Client\ClientController;
 use App\Http\Controllers\Api\Client\LoginController;
 use App\Http\Controllers\Api\CourierController;
@@ -31,6 +32,19 @@ Route::apiResources([
     'products' =>  ProductController::class,
     "couriers" =>  CourierController::class
 ]);
-Route::middleware('auth:client')->group(function () {
-    Route::apiResource('orders', OrderController::class)->only("index", "store", "destroy", "show");
+
+
+Route::middleware(['auth:client'])->group(function () {
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'update']);
+        Route::delete('/{product}', [CartController::class, 'destroy']);
+    });
+
+
+    Route::apiResource('orders', OrderController::class)
+        ->only("index", "store", "destroy", "show");
+});
+Route::middleware(['jwt.refresh'])->post('refresh', function () {
+    return response()->json(['message' => 'Token refreshed']);
 });

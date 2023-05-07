@@ -3,9 +3,20 @@
 namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Services\CartService;
+use App\Rules\CartNotEmpty;
 
 class StoreOrderRequest extends FormRequest
 {
+
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+        parent::__construct();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,10 +35,15 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'products' => 'required|array',
-            'products.*.product_id' => 'required|integer',
-            'products.*.quantity' => 'required|integer',
+            'cart' => [new CartNotEmpty($this->cartService)],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'cart' => $this->cartService->getCart(auth('client')->user()->id),
+        ]);
     }
 
 

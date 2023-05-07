@@ -7,15 +7,18 @@ use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Resources\Orders\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
 
 class OrderController extends Controller
 {
+    protected $orderService;
+    protected $cartService;
 
-    public function __construct(
-        private readonly OrderService $orderService
-    ) {}
+    public function __construct(OrderService $orderService, CartService $cartService)
+    {
+        $this->orderService = $orderService;
+        $this->cartService = $cartService;
+    }
 
 
     public function index()
@@ -32,8 +35,10 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
+        $clientId = auth()->id();
+        $cartData = $this->cartService->getCart($clientId);
         return new OrderResource(
-            $this->orderService->createOrder(auth()->id(), $request->validated())
+            $this->orderService->createOrder($clientId, $cartData)
         );
     }
 

@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function createOrder($clientId, $productIdsAndQuantities)
     {
         $order = DB::transaction(function () use ($clientId, $productIdsAndQuantities) {
@@ -19,17 +26,19 @@ class OrderService
                 'status' => OrderStatus::New
             ]);
 
-            foreach ($productIdsAndQuantities["products"] as $item) {
-                $product = Product::findOrFail($item["product_id"]);
+            foreach ($productIdsAndQuantities as $product_id => $quantity) {
+                $product = Product::findOrFail($product_id);
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'price' => $product->price * $item["quantity"],
-                    'quantity' => $item["quantity"],
+                    'price' => $product->price * $quantity,
+                    'quantity' => $quantity,
                 ]);
             }
             return $order;
         });
+
+        $this->cartService->clearCart($clientId);
         return $order;
     }
 }
