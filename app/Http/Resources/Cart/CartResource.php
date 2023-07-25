@@ -17,10 +17,17 @@ class CartResource extends JsonResource
         $products = [];
 
         foreach ($this->resource as $key => $value) {
-            $products[] = [
+            $product = [
                 'product_id' => $key,
-                'quantity' => (int)$value,
+                'quantity' => is_array($value) ? (int)$value['quantity'] : (int)$value,
             ];
+            if (is_array($value) && isset($value['name'])) {
+                $product['product_name'] = $value['name'];
+                if (isset($value['price'])) {
+                    $product['product_price'] = $value['price'];
+                }
+            }
+            $products[] = $product;
         }
 
         return [

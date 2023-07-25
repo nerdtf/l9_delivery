@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
+use App\Models\Product;
 
 class CartService {
     protected $redis;
@@ -19,14 +20,37 @@ class CartService {
         $this->redis->hSet("cart:$userId", $productId, $newQuantity);
     }
 
-    public function removeFromCart($userId, $productId)
+    public function removeFromCart($userId, $productId, $deleteWholeProductFromCart)
     {
-        $this->redis->hDel("cart:$userId", $productId);
+        if ($deleteWholeProductFromCart){
+            $this->redis->hDel("cart:$userId", $productId);
+        }
+        else{
+            $this->addToCart($userId, $productId, -1);
+        }
     }
 
-    public function getCart($userId)
+    public function getCart($userId, $showNames = false)
     {
-        return $this->redis->hGetAll("cart:$userId");
+        $cart = $this->redis->hGetAll("cart:$userId");
+
+        if ($showNames) {
+            $productIds = array_keys($cart);
+            $products = Product::whereIn('id', $productIds)->get();
+            $productNames = $products->pluck('name', 'id')->toArray();
+            $productPrices= $products->pluck('price', 'id')->toArray();
+            foreach ($cart as $productId => &$quantity) {
+                $productName = $productNames[$productId] ?? null;
+                $productPrice = $productPrices[$productId] ?? null;
+                $quantity = [
+                    'quantity' => $quantity,
+                    'name' => $productName,
+                    'price' => $productPrice,
+                ];
+            }
+
+        }
+        return $cart;
     }
 
     public function clearCart($userId)

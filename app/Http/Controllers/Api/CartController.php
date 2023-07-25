@@ -6,6 +6,7 @@ use App\Http\Requests\Cart\UpdateRequest;
 use App\Services\CartService;
 use App\Http\Resources\Cart\CartResource;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
@@ -16,10 +17,11 @@ class CartController extends Controller
         $this->cartService = $cartService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $showNames = $request->query("showNamesAndPrices", false) === 'true';
         $userId = auth()->id();
-        $cart = $this->cartService->getCart($userId);
+        $cart = $this->cartService->getCart($userId, $showNames);
         return new CartResource($cart);
     }
 
@@ -33,10 +35,11 @@ class CartController extends Controller
         return new CartResource($this->cartService->getCart($userId));
     }
 
-    public function destroy($productId)
+    public function destroy($productId, Request $request)
     {
         $userId = auth()->id();
-        $this->cartService->removeFromCart($userId, $productId);
+        $deleteWholeProduct = $request->query('delete_whole_product', false) === 'true';
+        $this->cartService->removeFromCart($userId, $productId, $deleteWholeProduct);
         return new CartResource($this->cartService->getCart($userId));
     }
 }

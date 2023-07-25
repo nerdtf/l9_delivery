@@ -27,7 +27,7 @@ class StoreClientRequest extends FormRequest
     {
         return [
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'last_name' => 'string|max:255',
             'address' => 'required|string',
             'email' => 'required|email|unique:clients',
             'phone' => 'required|regex:/^\+?[0-9]+$/|max:15|unique:clients',
@@ -42,9 +42,6 @@ class StoreClientRequest extends FormRequest
             'first_name.string' => 'First name must be a string.',
             'first_name.max' => 'First name cannot be longer than 255 characters.',
 
-            'last_name.required' => 'Last name is required.',
-            'last_name.string' => 'Last name must be a string.',
-            'last_name.max' => 'Last name cannot be longer than 255 characters.',
 
             'address.required' => 'Address is required.',
             'address.string' => 'Address must be a string.',
