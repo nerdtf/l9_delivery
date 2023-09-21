@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Clients;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Exceptions\CustomValidationException;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateClientRequest extends FormRequest
 {
@@ -27,10 +29,35 @@ class UpdateClientRequest extends FormRequest
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'address' => 'nullable|string',
-            'email' => 'nullable|email|unique:clients,email,' . $this->route("client")->id,
-            'phone' => 'nullable|regex:/^\+?[0-9]+$/|max:15|unique:clients,phone,' . $this->route("client")->id,
+            'email' => 'nullable|email|unique:clients,email,' . auth()->id(),
+            'phone' => 'nullable|regex:/^\+?[0-9]+$/|max:15|unique:clients,phone,' . auth()->id(),
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => 'nullable|string|min:6|confirmed',
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'first_name.string' => 'First name must be a string.',
+            'first_name.max' => 'First name cannot be longer than 255 characters.',
+
+            'address.string' => 'Address must be a string.',
+
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address is already in use.',
+
+            'phone.required' => 'Phone number is required.',
+            'phone.regex' => 'Please enter a valid phone number format.',
+            'phone.max' => 'Phone number cannot be longer than 15 characters.',
+            'phone.unique' => 'This phone number is already in use.',
+
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, or svg.',
+            'image.max' => 'The image size must not exceed 2048 kilobytes.',
+        ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new CustomValidationException($validator);
     }
 }

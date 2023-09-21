@@ -8,6 +8,7 @@ use App\Models\Client;
 use Throwable;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class ClientService {
 
@@ -20,7 +21,7 @@ class ClientService {
         $client->status = ClientStatus::Active;
         $client->save();
         $token = JWTAuth::fromUser($client);
-
+        //Log::debug($token);
         return new ClientResource([
             'token' => $token,
             'client' => $client
@@ -35,9 +36,29 @@ class ClientService {
         if (isset($validatedData['password'])) {
             $validatedData['password'] = bcrypt($validatedData['password']);
         }
-        $client->updateOrFail($validatedData);
+
+        if (isset($validatedData['image'])) {
+            $imageService = new ImageService();
+
+            $oldImage = $client->image;
+            if ($oldImage) {
+                $imageService->deleteImage($oldImage);
+            }
+
+            $filename = $imageService->storeImage($validatedData['image']);
+            $client->image = $filename;
+            $client->save();
+        }
+        else{
+            $client->updateOrFail($validatedData->toArray());
+        }
 
         return new ClientResource(['client' => $client]);
+    }
+
+    public function show($userId): ClientResource
+    {
+        return new ClientResource(['client' => Client::find($userId)]);
     }
 
 

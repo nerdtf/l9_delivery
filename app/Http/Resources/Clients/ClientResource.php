@@ -4,6 +4,7 @@ namespace App\Http\Resources\Clients;
 
 use App\Models\Client;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ClientResource extends JsonResource
 {
@@ -26,11 +27,12 @@ class ClientResource extends JsonResource
                 'email' => $client_data->email,
                 'phone' => $client_data->phone,
                 'image' => $client_data->image,
+                'created_at' => $client_data->created_at,
             ];
         }
         if (!empty($data)) {
             return array_merge($data, [
-                'token' => $client["token"],
+                'token' => $client["token"] ?? null,
             ]);
         }
         return [];

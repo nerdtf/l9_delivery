@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 Route::prefix('client')->group(function () {
     Route::post('register', [ClientController::class, 'store']);
-    Route::post('update', [ClientController::class, 'update']);
     Route::post('login', [LoginController::class, 'login']);
 });
 Route::apiResources([
@@ -41,7 +40,10 @@ Route::middleware(['auth:client'])->group(function () {
         Route::delete('/{product}', [CartController::class, 'destroy']);
     });
 
-
+    Route::prefix('client')->group(function () {
+        Route::get('/', [ClientController::class, 'show']);
+        Route::post('update', [ClientController::class, 'update']);
+    });
     Route::apiResource('orders', OrderController::class)
         ->only("index", "store", "destroy", "show");
 });

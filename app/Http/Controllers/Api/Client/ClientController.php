@@ -7,6 +7,7 @@ use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\Client;
 use App\Services\ClientService;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -20,9 +21,14 @@ class ClientController extends Controller
         return $this->clientService->store($request);
     }
 
-    public function update(UpdateClientRequest $request, Client $client)
+    public function update(UpdateClientRequest $request)
     {
-        return $this->clientService->update($client, $request);
+        return $this->clientService->update(auth()->user(), $request);
+    }
+
+    public function show()
+    {
+        return $this->clientService->show(auth()->id());
     }
 
 
