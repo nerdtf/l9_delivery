@@ -23,7 +23,7 @@ class OrderController extends Controller
 
     public function index()
     {
-        return  OrderResource::collection(auth()->user()->orders()->get());
+        return  OrderResource::collection(auth()->user()->orders()->with('items.product')->get());
     }
 
     public function show($orderId)
@@ -42,9 +42,5 @@ class OrderController extends Controller
         );
     }
 
-//    public function destroy()
-//    {
-//
-//    }
 
 }

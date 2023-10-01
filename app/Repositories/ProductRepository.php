@@ -15,8 +15,8 @@ class ProductRepository extends AbstractRepository
     {
         $query = $this->_getInstance();
         if (!empty($queryParams['search'])) {
-            $query->where('name', 'like', "%{$queryParams['search']}%")
-                ->orWhere('product', 'like', "%{$queryParams['search']}%");
+            $query = $query->where('name', 'like', "%{$queryParams['search']}%")
+                        ->orWhere('description', 'like', "%{$queryParams['search']}%");
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(
