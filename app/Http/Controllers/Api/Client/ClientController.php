@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
-use App\Models\Client;
 use App\Services\ClientService;
-use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
