@@ -1,3 +1,4 @@
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -20,6 +21,60 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
+
+## Getting Started with l9_delivery
+
+1. Clone the repository to your local machine: `git clone https://github.com/nerdtf/l9_delivery`.
+2. Navigate to the project directory.
+3. Install the required dependencies:
+
+```
+composer install
+```
+
+4. Copy the `.env.example` file to `.env`:
+
+```
+cp .env.example .env
+```
+
+5. Set up the application key:
+
+```
+php artisan key:generate
+```
+
+6. Set up the JWT secret:
+
+```
+php artisan jwt:secret
+```
+
+7. Migrate the database:
+
+```
+php artisan migrate
+```
+
+8. Seed the courier data:
+
+```
+php artisan db:seed CourierSeeder
+```
+
+9. Seed the product data:
+
+```
+php artisan db:seed ProductSeeder
+```
+
+### Running the Application
+
+To start the local development server:
+
+```
+php artisan serve
+```
 
 ## Learning Laravel
 
